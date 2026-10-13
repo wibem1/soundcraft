@@ -1,0 +1,37 @@
+name: AI Studio Phase 1
+on:
+  push:
+    branches: [ai-studio/dev]
+  pull_request:
+    branches: [ai-studio/dev]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ai-studio-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native-headless:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.90.0
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy -p soundcraft-ai-studio --all-targets --locked -- -D warnings
+      - run: cargo test -p soundcraft-ai-studio -p soundcraft-automation --locked
+      - run: cargo xtask layers
+      - run: cargo xtask assets
+      - name: Run isolated workflow and capture diagnosis
+        shell: bash
+        run: cargo run --locked -p soundcraft-ai-studio -- self-test > ai-studio-diagnostics.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-studio-phase1-${{ matrix.os }}-${{ github.sha }}
+          path: ai-studio-diagnostics.json

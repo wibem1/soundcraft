@@ -31,3 +31,7 @@ Befehls-ID, Parameter, Vorbedingungen, Antwort, Fehler, verifizierbare Nachbedin
 
 ## Grenzen
 API-Discovery beweist nicht unverändertes Verhalten. Ein grüner Test bedeutet Kompatibilität nur für die abgedeckten Workflows. Headless-Root-Restriktionen gelten nicht automatisch für die angeschlossene Desktop-App; die Bridge muss Schreibaktionen gesondert autorisieren.
+
+## Implementierungsstand 2026-10-13
+
+Phase 1: `crates/ai-studio`. 478 Engine-Befehle in [API-BASELINE-0.6.1.json](API-BASELINE-0.6.1.json); API-Diff und isolierte Workflow-Tests sind implementiert. UI-Befehle/MCP-Tools sowie Desktop- und Plattform-Release-Gates sind noch nicht vollständig abgedeckt. Deshalb ergibt allein die Discovery niemals KOMPATIBEL. Siehe [Phase 1](PHASE-1.md).

@@ -3584,6 +3584,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "soundcraft-ai-studio"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "soundcraft-automation",
+ "soundcraft-engine",
+]
+
+[[package]]
 name = "soundcraft-au-host"
 version = "0.6.1"
 dependencies = [

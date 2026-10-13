@@ -1,0 +1,17 @@
+[package]
+name = "soundcraft-ai-studio"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository = "https://github.com/wibem1/soundcraft"
+description = "Isolated AI Bridge, compatibility checks and diagnostics for SoundCraft"
+
+[dependencies]
+soundcraft-automation.workspace = true
+soundcraft-engine.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true
