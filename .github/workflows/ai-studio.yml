@@ -1,4 +1,4 @@
-name: AI Studio Phase 1
+name: AI Studio Native Panel
 on:
   push:
     branches: [ai-studio/dev]
@@ -19,19 +19,37 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@1.90.0
+      - uses: dtolnay/rust-toolchain@1.95.0
         with:
           components: rustfmt, clippy
+      - name: Linux build and offscreen rendering dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libudev-dev libxkbcommon-dev mesa-vulkan-drivers pkg-config
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all -- --check
-      - run: cargo clippy -p soundcraft-ai-studio --all-targets --locked -- -D warnings
+      - run: cargo clippy -p soundcraft-ai-studio -p soundcraft-ui-egui --all-targets --locked -- -D warnings
       - run: cargo test -p soundcraft-ai-studio -p soundcraft-automation --locked
+      - run: cargo test -p soundcraft-ui-egui --test ai_studio --test commands_filter --test command_reachability --locked
+      - run: cargo build -p soundcraft --locked
+      - name: Reduce native binary size
+        if: runner.os != 'Windows'
+        run: strip target/debug/soundcraft
       - run: cargo xtask layers
       - run: cargo xtask assets
       - name: Run isolated workflow and capture diagnosis
         shell: bash
         run: cargo run --locked -p soundcraft-ai-studio -- self-test > ai-studio-diagnostics.json
+      - name: Render the actual panel
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          cargo run --locked -p soundcraft-ui-egui --example ui_shot -- ai-studio-panel.png docs/ai-studio/panel-smoke.jsonl --size 1400x900
+          test -s ai-studio-panel.png
       - uses: actions/upload-artifact@v4
         with:
-          name: ai-studio-phase1-${{ matrix.os }}-${{ github.sha }}
-          path: ai-studio-diagnostics.json
+          name: ai-studio-panel-${{ matrix.os }}-${{ github.sha }}
+          path: |
+            ai-studio-diagnostics.json
+            ai-studio-panel.png
+            target/debug/soundcraft
+            target/debug/soundcraft.exe

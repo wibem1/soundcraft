@@ -4,6 +4,7 @@
 //! executing commands. It can be replaced without touching anything below it.
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
+pub mod ai_studio;
 pub mod bounce;
 pub mod control;
 pub mod credits;
@@ -70,6 +71,7 @@ pub struct UiState {
     pub show_session_info: bool,
     pub show_audio_health: bool,
     pub show_about: bool,
+    pub show_ai_studio: bool,
     pub show_midi_editor: bool,
     pub show_universe: bool,
     pub narrow_mix: bool,
@@ -143,6 +145,7 @@ impl Default for UiState {
             show_session_info: false,
             show_audio_health: false,
             show_about: false,
+            show_ai_studio: false,
             show_midi_editor: false,
             show_universe: false,
             narrow_mix: false,
@@ -264,6 +267,7 @@ pub struct SoundApp {
     /// Where the takes being recorded go, autosaved with the session so a crash can't lose them.
     take_plan: Option<soundcraft_engine::io::Recording>,
     pub ui: UiState,
+    pub ai_studio: ai_studio::PanelState,
     pub audio_health_report: Option<Result<Value, String>>,
     pub services: Services,
     /// Set only by a desktop host after installing an OS menu bar.
@@ -358,6 +362,7 @@ impl SoundApp {
             take_plan: None,
             ui: UiState::default(),
             audio_health_report: None,
+            ai_studio: ai_studio::PanelState::default(),
             services,
             native_menu_bar: false,
             autosave_dir: None,
@@ -1230,6 +1235,7 @@ impl SoundApp {
         }
         panels::floating(self, &ctx);
         windows::show(self, &ctx);
+        ai_studio::show(self, &ctx);
         video_window::show(self, &ctx);
         ops_windows::show(self, &ctx);
         extra_windows::show(self, &ctx);

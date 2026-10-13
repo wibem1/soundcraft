@@ -177,6 +177,7 @@ fn services() -> Services {
             let path = std::path::Path::new(default);
             let mut d = match purpose {
                 "file.bounce_mix" => rfd::FileDialog::new().add_filter("Audio", &["wav", "aif", "aiff", "flac"]),
+                "AI Studio Diagnose" => rfd::FileDialog::new().add_filter("JSON-Diagnose", &["json"]),
                 _ => rfd::FileDialog::new().add_filter("SoundCraft Session", &["scraft"]),
             };
             if let Some(dir) = path.parent().filter(|dir| dir.is_dir()) {
