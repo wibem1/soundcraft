@@ -21,3 +21,5 @@ Reproduzierbare Tests und Diagnose, macOS/Windows-Verifikation, keine Änderunge
 Status 2026-10-13: Phase 1 als getrenntes Rust-Modul implementiert. Bridge, API-Diff, isolierter Selbsttest und Diagnose sind lokal geprüft; native Plattform-/Desktop-Release-Gates bleiben offen. Siehe [Phase 1](PHASE-1.md) und [Testergebnisse](TEST-RESULTS.md).
 
 Phase 2, 2026-10-13: natives Panel 0.1.1 implementiert; lokale UI-Tests und Bildkontrolle bestanden. Plattform-Builds im erweiterten CI-Workflow vorgesehen. Noch keine Provider-Anbindung. Siehe [Phase 2](PHASE-2.md).
+
+Phase 3: 0.2.0 implementiert echte Provider-Anfragen, nativen Dialog, Schlüsselablage und ausdrücklich bestätigte, geprüfte Grundbearbeitungen. [Phase 3](PHASE-3.md) beschreibt Umfang und Testgrenzen; [Start](START.md) die Bedienung. Live-Anbieterprüfung setzt einen eigenen API-Schlüssel voraus.

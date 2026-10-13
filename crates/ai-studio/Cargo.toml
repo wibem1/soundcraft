@@ -1,6 +1,6 @@
 [package]
 name = "soundcraft-ai-studio"
-version = "0.1.1"
+version = "0.2.0"
 edition.workspace = true
 license.workspace = true
 rust-version.workspace = true
@@ -12,6 +12,14 @@ soundcraft-automation.workspace = true
 soundcraft-engine.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+zeroize = "1"
+sha2 = "0.10"
+
+[target.'cfg(any(target_os = "macos", target_os = "windows"))'.dependencies]
+keyring = { version = "=3.6.3", features = ["apple-native", "windows-native"] }
 
 [lints]
 workspace = true

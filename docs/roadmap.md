@@ -88,3 +88,7 @@ There is no `cargo xtask scorecard` in this repo; the measured number is `cargo 
 |---|---|---|
 | 2026-10-10 | minor | Added the alpha gate (3 of 6 core workflows fail → pre-alpha) |
 | 2026-10-10 | major | Created from ROADMAP.md's milestones and alpha list; added M12–M17 and the beta plan with estimates |
+
+## Independent AI Studio development branch — 2026-10-13
+
+The `ai-studio/dev` fork implements AI Studio 0.2.0: OpenAI/Anthropic/Gemini native chat, session/native OS credentials, usage estimates, local project dialogue and explicitly confirmed basic edits through the existing command API. No upstream alpha/parity gate is closed by this work. Details and tested boundaries: [Phase 3](ai-studio/PHASE-3.md), [test results](ai-studio/TEST-RESULTS.md).

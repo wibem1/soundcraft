@@ -167,3 +167,7 @@ mutated and truncated movies. Field reports from the first public week are track
 | 2026-10-10 | major | Rewritten to the progress-docs standard: stage alpha (re-normalized the same day), two numbers (breadth ~70 %, ready ~40 %), dimension/feature/language tables, hours re-calibrated; area table moved to docs/target-app-parity.md, milestones to docs/roadmap.md |
 | 2026-10-07 | major | Menu parity 94 %, ~65 % estimated feature parity, alpha list |
 | 2026-10-06 | minor | Alpha and parity estimates |
+
+## AI Studio fork — 2026-10-13
+
+On `ai-studio/dev`, AI Studio 0.2.0 adds native provider chat and explicitly confirmed, verified basic MIDI/track/mixer proposals. This independent fork milestone changes no upstream parity assessment. Scope, validation and remaining full-workspace/live-provider gates: [Phase 3](docs/ai-studio/PHASE-3.md), [test results](docs/ai-studio/TEST-RESULTS.md).

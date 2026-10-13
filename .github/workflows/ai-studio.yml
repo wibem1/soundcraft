@@ -1,4 +1,4 @@
-name: AI Studio Native Panel
+name: AI Studio Native Chat
 on:
   push:
     branches: [ai-studio/dev]
@@ -29,6 +29,7 @@ jobs:
       - run: cargo fmt --all -- --check
       - run: cargo clippy -p soundcraft-ai-studio -p soundcraft-ui-egui --all-targets --locked -- -D warnings
       - run: cargo test -p soundcraft-ai-studio -p soundcraft-automation --locked
+      - run: cargo test -p soundcraft-ui-egui --lib ai_chat --locked
       - run: cargo test -p soundcraft-ui-egui --test ai_studio --test commands_filter --test command_reachability --locked
       - run: cargo build -p soundcraft --locked
       - name: Reduce native binary size
@@ -45,11 +46,20 @@ jobs:
         run: |
           cargo run --locked -p soundcraft-ui-egui --example ui_shot -- ai-studio-panel.png docs/ai-studio/panel-smoke.jsonl --size 1400x900
           test -s ai-studio-panel.png
+      - name: Prepare runnable package
+        shell: bash
+        run: |
+          mkdir -p ai-studio-package
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp target/debug/soundcraft.exe ai-studio-package/SoundCraft-AI-Studio.exe
+          else
+            cp target/debug/soundcraft ai-studio-package/SoundCraft-AI-Studio
+          fi
+          cp docs/ai-studio/START.md ai-studio-package/START.md
+          cp ai-studio-diagnostics.json ai-studio-package/ai-studio-diagnostics.json
       - uses: actions/upload-artifact@v4
         with:
-          name: ai-studio-panel-${{ matrix.os }}-${{ github.sha }}
+          name: ai-studio-chat-${{ matrix.os }}-${{ github.sha }}
           path: |
-            ai-studio-diagnostics.json
+            ai-studio-package/*
             ai-studio-panel.png
-            target/debug/soundcraft
-            target/debug/soundcraft.exe

@@ -10,7 +10,9 @@ pub struct PanelState {
     pub context: Option<Value>,
     revision: Option<u64>,
     metadata: Value,
-    events: Vec<Value>,
+    #[cfg(not(target_arch = "wasm32"))]
+    pub chat: crate::ai_chat::ChatState,
+    pub(crate) events: Vec<Value>,
     pub self_test: Option<Value>,
     worker: Option<Receiver<Result<Value, String>>>,
     pub status: String,
@@ -70,6 +72,11 @@ impl PanelState {
         result["events"] = json!(self.events);
         result["self_test"] = self.self_test.clone().unwrap_or(Value::Null);
         result["musical_data_included"] = json!(false);
+        #[cfg(not(target_arch = "wasm32"))]
+        {
+            result["ai"] = self.chat.diagnostics();
+            result["musical_data_included"] = json!(self.chat.include_dialog_diagnostics);
+        }
         result
     }
     pub fn running(&self) -> bool {
@@ -119,6 +126,8 @@ impl PanelState {
 
 pub fn show(app: &mut SoundApp, ctx: &egui::Context) {
     app.ai_studio.poll();
+    #[cfg(not(target_arch = "wasm32"))]
+    app.ai_studio.chat.poll();
     if !app.ui.show_ai_studio {
         app.ai_studio.context = None;
         app.ai_studio.revision = None;
@@ -135,14 +144,17 @@ pub fn show(app: &mut SoundApp, ctx: &egui::Context) {
     egui::Window::new("AI Studio")
         .id(egui::Id::new("ai_studio_panel"))
         .open(&mut open)
-        .default_size(egui::vec2(430.0, 610.0))
+        .default_size(egui::vec2(530.0, 740.0))
         .default_pos(egui::pos2(760.0, 140.0))
         .min_size(egui::vec2(310.0, 260.0))
         .resizable(true)
         .show(ctx, |ui| {
             egui::ScrollArea::vertical().id_salt("ai_studio_scroll").show(ui, |ui| {
                 ui.heading("Dein musikalischer Assistent");
-                ui.label("Projektübersicht und Systemprüfung stehen bereit. Der KI-Dialog folgt im nächsten Entwicklungsschritt.");
+                #[cfg(not(target_arch = "wasm32"))]
+                crate::ai_chat::show(app, ui, ctx);
+                #[cfg(target_arch = "wasm32")]
+                ui.label("KI-Dialog ist in der Desktop-Version verfügbar.");
                 ui.add_space(12.0);
                 ui.horizontal(|ui| {
                     ui.strong("Aktuelles Projekt");
@@ -153,7 +165,7 @@ pub fn show(app: &mut SoundApp, ctx: &egui::Context) {
                     let tracks = session.get("tracks").and_then(Value::as_array);
                     ui.label(format!("{} Spuren", tracks.map(Vec::len).unwrap_or(0)));
                     if let Some(tracks) = tracks {
-                        egui::ScrollArea::vertical().id_salt("ai_studio_tracks").max_height(180.0).show(ui, |ui| {
+                        egui::ScrollArea::vertical().id_salt("ai_studio_tracks").max_height(120.0).show(ui, |ui| {
                             for track in tracks.iter().take(128) {
                                 let name = track.get("name").and_then(Value::as_str).unwrap_or("Spur");
                                 let kind = track.get("kind").and_then(Value::as_str).unwrap_or("");
@@ -199,7 +211,9 @@ pub fn show(app: &mut SoundApp, ctx: &egui::Context) {
                     ctx.request_repaint_after(std::time::Duration::from_millis(100));
                 }
                 ui.label(&app.ai_studio.status);
-                ui.small("Die Diagnose enthält keine Zugangsdaten oder musikalischen Inhalte.");
+                #[cfg(not(target_arch = "wasm32"))]
+                ui.checkbox(&mut app.ai_studio.chat.include_dialog_diagnostics, "Dialog in die Diagnose aufnehmen");
+                ui.small("Zugangsdaten werden niemals in die Diagnose aufgenommen.");
                 ui.add_space(12.0);
                 ui.small(format!("SoundCraft AI Studio {} · 13.10.2026 · Entwicklungsversion", soundcraft_ai_studio::VERSION));
             });

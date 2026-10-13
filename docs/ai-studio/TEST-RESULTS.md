@@ -39,3 +39,15 @@ Ein grüner Headless-Workflow beweist keine Desktop-, Audio-/Plugin- oder GUI-Ko
 **Freigabestatus: Entwicklungsstand; keine Desktop-/Installer-Freigabe.** Kein Release-Zweig verändert, kein Installer veröffentlicht. Die bestehende SoundCraft-Fassung bleibt erhalten. `main`, Audio-Engine, DSP, Wiedergabe und Plugin-Hosts bleiben unverändert.
 
 Die Prüfung des gesamten Workspaces bleibt ein offenes Gate. Die abgedeckte Phase-1-Funktionalität ist lokal getestet; die folgenden Integrationsphasen beginnen nicht mit einer behaupteten Desktop-Freigabe.
+
+## Phase 3 — AI Studio 0.2.0, lokale Prüfungen
+
+- Rust 1.95: 21 AI-Studio-Tests (einschließlich realem lokalem HTTP-Transport und allen drei Anbieterprotokollen) und 16 Automation-Tests bestanden.
+- Vier native Chat-Tests bestanden: Antwort/Preview/Apply/Undo im echten Engine-Projekt, veraltete Revision, Projektwechsel und Schlüssel-/Pfadschutz.
+- Sieben bestehende Panel-/Command-UI-Tests bestanden.
+- Clippy für AI Studio und UI, alle Targets, mit `-D warnings` bestanden. Formatierung, Layer und Assets bestanden.
+- Tatsächliches UI mit dem nativen egui-Code offscreen gerendert und geprüft; keine simulierte Webseite.
+- Vollständiges `cargo +1.95.0 xtask ci` versucht: Formatierung bestanden, Workspace-Clippy durch Linkerfehler (`undefined hidden symbol` in `displaydoc`/`syn`) abgebrochen. Vollständiges Workspace-/WASM-Gate bleibt offen. Lokale gezielte Prüfungen verwenden unveränderte Sources mit Build-Overrides: opt-level=0, codegen-units=1, incremental=false, j=2; keine globalen Profiländerungen committed.
+- Ohne API-Schlüssel keine erfolgreichen Live-Aufrufe. Die kontrollierten Anbieterantworten sind Fixtures; produktiver Netzwerkadapter verwendet die offiziellen HTTPS-Endpunkte.
+
+Native Plattformbuilds und Schlüsselablage werden in einem separaten Workflow geprüft; Abschluss wird anschließend mit tatsächlichem Lauf und Commit dokumentiert.

@@ -1,7 +1,14 @@
 //! Phase 1 uses only the documented control protocol; no audio or UI integration.
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
+pub mod assistant;
 pub mod compatibility;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod credentials;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod history;
+#[cfg(not(target_arch = "wasm32"))]
+pub mod provider;
 pub mod smoke;
 pub mod transport;
 
@@ -100,7 +107,7 @@ impl<B: Backend> Bridge<B> {
             "soundcraft_base_commit": "c0cb99340891d306e216582db465f3594b89dc1d", "os": std::env::consts::OS, "architecture": std::env::consts::ARCH,
             "events": self.events, "musical_data_included": false,
             "provider": null, "model": null, "tokens": 0, "api_cost": 0,
-            "scope": "Phase 1: no external AI calls"
+            "scope": "Bridge operation metadata; provider usage is reported separately"
         })
     }
 }

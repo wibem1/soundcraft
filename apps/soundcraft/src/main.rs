@@ -273,6 +273,11 @@ fn main() -> eframe::Result {
             let mut app = SoundApp::new(engine, player, services());
             app.autosave_dir = prefs_path().and_then(|p| p.parent().map(|d| d.join("Autosave")));
             app.leftovers = app.autosave_dir.as_deref().map(soundcraft_engine::autosave::leftovers).unwrap_or_default();
+            #[cfg(not(target_arch = "wasm32"))]
+            {
+                app.ai_studio.chat.memory_root =
+                    if prefs_enabled() { prefs_path().and_then(|p| p.parent().map(|d| d.join("AI-Studio"))) } else { None };
+            }
             app.preset_dir = prefs_path().and_then(|p| p.parent().map(|d| d.join("Presets")));
             app.extra.ui_scale = prefs.ui_scale;
             app.ui = prefs;

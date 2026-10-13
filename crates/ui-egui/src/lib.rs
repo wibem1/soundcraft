@@ -4,6 +4,8 @@
 //! executing commands. It can be replaced without touching anything below it.
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
+#[cfg(not(target_arch = "wasm32"))]
+pub mod ai_chat;
 pub mod ai_studio;
 pub mod bounce;
 pub mod control;
@@ -72,6 +74,7 @@ pub struct UiState {
     pub show_audio_health: bool,
     pub show_about: bool,
     pub show_ai_studio: bool,
+    pub ai_settings: soundcraft_ai_studio::assistant::Settings,
     pub show_midi_editor: bool,
     pub show_universe: bool,
     pub narrow_mix: bool,
@@ -146,6 +149,7 @@ impl Default for UiState {
             show_audio_health: false,
             show_about: false,
             show_ai_studio: false,
+            ai_settings: soundcraft_ai_studio::assistant::Settings::default(),
             show_midi_editor: false,
             show_universe: false,
             narrow_mix: false,
@@ -430,6 +434,10 @@ impl SoundApp {
         let replacing = matches!(id, "session.new" | "session.open" | "session.close" | "session.revert");
         match self.engine.execute(id, &params) {
             Ok(v) => {
+                #[cfg(not(target_arch = "wasm32"))]
+                if replacing {
+                    self.ai_studio.chat.project_replaced();
+                }
                 if replacing || (id.starts_with("session.save") && !self.engine.is_dirty()) {
                     self.release_autosave(false);
                 }
