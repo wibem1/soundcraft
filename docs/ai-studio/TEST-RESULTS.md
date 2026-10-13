@@ -22,7 +22,19 @@ Die erfolgreichen Modulprüfungen wurden mit der normalen Cargo-Konfiguration un
 
 ## Native Plattformen und Freigabe
 
-Der Workflow `.github/workflows/ai-studio.yml` führt die Headless-Prüfungen nativ auf macOS, Windows und Linux aus. Beim Erstellen dieses Berichts sind die Ergebnisse dieses neuen Workflows noch nicht verifiziert. Ein grüner Workflow beweist keine Desktop-, Audio-/Plugin- oder GUI-Kompatibilität.
+Der Workflow `.github/workflows/ai-studio.yml` wurde für Implementierungscommit `92d291f29cf7faeacb938596db72174d288d2c2a` tatsächlich ausgeführt und geprüft:
+
+| Native Plattform | Gesamter Phase-1-Workflow |
+|---|---|
+| macOS | Erfolgreich |
+| Windows | Erfolgreich |
+| Linux | Erfolgreich |
+
+Alle drei Jobs bestanden Formatierung, Clippy, Bridge-/Transport-/Automation-Tests, Architektur-/Asset-Prüfung und isolierten Selbsttest. Diagnoseartefakte wurden erzeugt.
+
+Nachweis: [GitHub Actions, Lauf 38456704340](https://github.com/wibem1/soundcraft/actions/runs/38456704340).
+
+Ein grüner Headless-Workflow beweist keine Desktop-, Audio-/Plugin- oder GUI-Kompatibilität. Die berichteten Ergebnisse gehören zum oben genannten Implementierungscommit; diese anschließende Dokumentationsänderung verändert keinen Code.
 
 **Freigabestatus: Entwicklungsstand; keine Desktop-/Installer-Freigabe.** Kein Release-Zweig verändert, kein Installer veröffentlicht. Die bestehende SoundCraft-Fassung bleibt erhalten. `main`, Audio-Engine, DSP, Wiedergabe und Plugin-Hosts bleiben unverändert.
 
