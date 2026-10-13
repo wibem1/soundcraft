@@ -1,6 +1,6 @@
 # SoundCraft AI Studio 0.1.1 — natives Panel
 
-Stand: 2026-10-13. Getestete lokale Entwicklungsstufe; Plattform-Builds werden separat geprüft.
+Stand: 2026-10-13. Native Entwicklungsstufe mit lokal geprüfter Oberfläche und erfolgreichen Plattform-Builds/-Tests.
 
 ## Bedienung
 
@@ -34,6 +34,18 @@ Die lokale Werkzeugkette benötigte zusätzliche Linux-Entwicklungspakete. Sie w
 
 ## Native Builds und Grenzen
 
-Der CI-Workflow baut die Desktop-App und führt die gezielten Modul- und UI-Tests unter macOS, Windows und Linux aus. Linux erzeugt außerdem einen gerenderten Screenshot. Die Artefakte sind unsignierte Entwicklungsprogramme und Diagnosen, keine freigegebenen Installationspakete. Zum Zeitpunkt dieser Dokumentation sind diese neuen Plattformläufe noch nicht verifiziert. Ein erfolgreicher Build ersetzt keinen praktischen Audio-/Plugin-Test und keine vollständige Desktop-Abnahme.
+Der CI-Workflow baut die Desktop-App und führt die gezielten Modul- und UI-Tests unter macOS, Windows und Linux aus. Linux erzeugt außerdem einen gerenderten Screenshot. Die Artefakte sind unsignierte Entwicklungsprogramme und Diagnosen, keine freigegebenen Installationspakete. Der vollständige Workflow wurde für Commit `dc6b4e4b2136511db59165dab86d572a95e5bc22` tatsächlich ausgeführt und geprüft:
+
+| Plattform | Tests und Desktop-Build |
+|---|---|
+| Windows | Erfolgreich |
+| macOS | Erfolgreich |
+| Linux | Erfolgreich, einschließlich Screenshot |
+
+[Nachweis und Entwicklungsartefakte: GitHub Actions, Lauf 38459644221](https://github.com/wibem1/soundcraft/actions/runs/38459644221).
+
+Die Tests der Bridge, Automation und UI, die Clippy-Prüfung sowie Architektur-/Asset-Prüfung und der isolierte Selbsttest bestanden auf allen drei Plattformen. Zusätzlich wurde die Desktop-App gebaut. Diese anschließende Dokumentationsänderung verändert keinen Code.
+
+Ein erfolgreicher Build ersetzt keinen praktischen Audio-/Plugin-Test und keine vollständige Desktop-Abnahme.
 
 Der vollständige Workspace-/WASM-Release-Gate bleibt offen. Das native Panel wurde lokal geprüft; die in Phase 1 dokumentierten Grenzen werden nicht als bestanden umgedeutet.
